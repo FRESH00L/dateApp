@@ -34,8 +34,9 @@ function useFloatingParticles() {
 }
 
 function getNameFromUrl() {
-  const raw = window.location.pathname.replace(/^\//, '').trim()
-  return raw || null
+  const base = import.meta.env.BASE_URL
+  const path = window.location.pathname.slice(base.length).replace(/^\//, '').trim()
+  return path || null
 }
 
 // views: 'question' | 'accepted' | 'datepicker' | 'map' | 'quiz' | 'final'
