@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/dateApp/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Randka 💖</title>
+    <script>
+      (function () {
+        var p = new URLSearchParams(window.location.search).get('p');
+        if (p) {
+          history.replaceState(null, '', '/dateApp' + p + window.location.hash);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/dateApp/assets/index-DW-NvSEI.js"></script>
+    <link rel="stylesheet" crossorigin href="/dateApp/assets/index-QKtrRXyd.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
