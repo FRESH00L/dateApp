@@ -64,6 +64,13 @@ function ClockFace({ items, selected, onSelect, dotR, formatLabel }) {
   )
 }
 
+// Dates blocked by the organiser (year, 0-indexed month, day)
+const UNAVAILABLE = new Set([
+  '2026-5-12',
+  '2026-5-25', '2026-5-26', '2026-5-27', '2026-5-28', '2026-5-29', '2026-5-30',
+  '2026-6-1',
+])
+
 export default function DatePicker({ onSelect }) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -89,9 +96,10 @@ export default function DatePicker({ onSelect }) {
     if (month === 11) { setMonth(0); setYear(y => y + 1) } else setMonth(m => m + 1)
   }
 
-  const isPast     = day => new Date(year, month, day) < today
-  const isToday    = day => day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
-  const isSelected = day =>
+  const isPast        = day => new Date(year, month, day) < today
+  const isUnavailable = day => UNAVAILABLE.has(`${year}-${month}-${day}`)
+  const isToday       = day => day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
+  const isSelected    = day =>
     selDate && selDate.getDate() === day && selDate.getMonth() === month && selDate.getFullYear() === year
 
   const cells = [
@@ -126,13 +134,14 @@ export default function DatePicker({ onSelect }) {
               key={i}
               className={[
                 'cal-day',
-                !day                   ? 'cal-empty'    : '',
-                day && isPast(day)     ? 'cal-past'     : '',
-                day && isToday(day)    ? 'cal-today'    : '',
-                day && isSelected(day) ? 'cal-selected' : '',
-                day && !isPast(day)    ? 'cal-available': '',
+                !day                                      ? 'cal-empty'       : '',
+                day && isPast(day)                        ? 'cal-past'        : '',
+                day && !isPast(day) && isUnavailable(day) ? 'cal-unavailable' : '',
+                day && isToday(day)                       ? 'cal-today'       : '',
+                day && isSelected(day)                    ? 'cal-selected'    : '',
+                day && !isPast(day) && !isUnavailable(day)? 'cal-available'   : '',
               ].filter(Boolean).join(' ')}
-              onClick={() => day && !isPast(day) && setSelDate(new Date(year, month, day))}
+              onClick={() => day && !isPast(day) && !isUnavailable(day) && setSelDate(new Date(year, month, day))}
             >
               {day}
             </div>
